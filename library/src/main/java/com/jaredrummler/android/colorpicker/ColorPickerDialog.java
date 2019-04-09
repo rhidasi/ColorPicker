@@ -368,60 +368,35 @@ public class ColorPickerDialog extends DialogFragment implements ColorPickerView
   }
 
   private int parseColorString(String colorString) {
-    int a, r, g, b = 0;
-    if (colorString.startsWith("#")) {
-      colorString = colorString.substring(1);
-    }
+    int a = Color.alpha(color);
+    int r = Color.red(color);
+    int g = Color.green(color);
+    int b = Color.blue(color);
     try {
-      if (colorString.length() == 0) {
-        r = 0;
+      if (colorString.length() == 3) {
         a = 255;
-        g = 0;
-      } else if (colorString.length() <= 2) {
-        a = 255;
-        r = 0;
-        b = Integer.parseInt(colorString, 16);
-        g = 0;
-      } else if (colorString.length() == 3) {
-        a = 255;
-        r = Integer.parseInt(colorString.substring(0, 1), 16);
-        g = Integer.parseInt(colorString.substring(1, 2), 16);
-        b = Integer.parseInt(colorString.substring(2, 3), 16);
-      } else if (colorString.length() == 4) {
-        a = 255;
-        r = Integer.parseInt(colorString.substring(0, 2), 16);
-        g = r;
-        r = 0;
-        b = Integer.parseInt(colorString.substring(2, 4), 16);
-      } else if (colorString.length() == 5) {
-        a = 255;
-        r = Integer.parseInt(colorString.substring(0, 1), 16);
-        g = Integer.parseInt(colorString.substring(1, 3), 16);
-        b = Integer.parseInt(colorString.substring(3, 5), 16);
+        r = Integer.parseInt(colorString.substring(0, 1), 16) * 17;
+        g = Integer.parseInt(colorString.substring(1, 2), 16) * 17;
+        b = Integer.parseInt(colorString.substring(2, 3), 16) * 17;
+      } else if (colorString.length() == 4 && showAlphaSlider) {
+        a = Integer.parseInt(colorString.substring(0, 1), 16) * 17;
+        r = Integer.parseInt(colorString.substring(1, 2), 16) * 17;
+        g = Integer.parseInt(colorString.substring(2, 3), 16) * 17;
+        b = Integer.parseInt(colorString.substring(3, 4), 16) * 17;
       } else if (colorString.length() == 6) {
         a = 255;
         r = Integer.parseInt(colorString.substring(0, 2), 16);
         g = Integer.parseInt(colorString.substring(2, 4), 16);
         b = Integer.parseInt(colorString.substring(4, 6), 16);
-      } else if (colorString.length() == 7) {
-        a = Integer.parseInt(colorString.substring(0, 1), 16);
-        r = Integer.parseInt(colorString.substring(1, 3), 16);
-        g = Integer.parseInt(colorString.substring(3, 5), 16);
-        b = Integer.parseInt(colorString.substring(5, 7), 16);
-      } else if (colorString.length() == 8) {
+      } else if (colorString.length() == 8 && showAlphaSlider) {
         a = Integer.parseInt(colorString.substring(0, 2), 16);
         r = Integer.parseInt(colorString.substring(2, 4), 16);
         g = Integer.parseInt(colorString.substring(4, 6), 16);
         b = Integer.parseInt(colorString.substring(6, 8), 16);
-      } else {
-        b = -1;
-        g = -1;
-        r = -1;
-        a = -1;
       }
     } catch (final NumberFormatException e) {
       Log.w(TAG, "Invalid color format: " + colorString);
-      return Color.BLACK;
+      return color;
     }
     return Color.argb(a, r, g, b);
   }
